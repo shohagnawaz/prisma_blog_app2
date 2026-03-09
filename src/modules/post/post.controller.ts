@@ -20,4 +20,20 @@ const createPost = async (req: Request, res: Response) => {
     }
 }
 
-export const PostController = { createPost }
+const getAllPosts = async (req: Request, res: Response) => {
+    try {
+        const search = req.query;
+        const searchString = typeof search === "string" ? search : undefined;
+        const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
+        const result = await postService.getAllPosts({search: searchString, tags});
+        res.status(200).json(result)
+    }
+    catch(error) {
+        res.status(400).json({
+            error: "Failed to fetch posts",
+            details: error
+        })
+    }
+} 
+
+export const PostController = { createPost, getAllPosts }
